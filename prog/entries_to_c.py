@@ -9,6 +9,8 @@ def str_to_entry(str, prev_timing):
 	tokens = str.split()
 
 	l = len(tokens)
+	if l == 0:
+		return None
 	if l != 3:
 		error("token length is not 3 but %d" % l)
 		exit(1)
@@ -49,6 +51,8 @@ def main():
 			break
 
 		t = str_to_entry(s, prev_timing)
+		if t == None:
+			continue
 		ts.append(t)
 		prev_timing = t[0]
 
