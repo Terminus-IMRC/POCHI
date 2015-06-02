@@ -11,6 +11,8 @@ def str_to_entry(str, prev_timing):
 	l = len(tokens)
 	if l == 0:
 		return None
+	if tokens[0][0] == '#':
+		return None
 	if l != 3:
 		error("token length is not 3 but %d" % l)
 		exit(1)
