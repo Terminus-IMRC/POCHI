@@ -63,7 +63,7 @@ def main():
 	for i in range(len(ts)):
 		t = ts[i]
 		print("\t/* %d */ {%d, %d, %d}," % (i, t[0], t[1], t[2]))
-	print("}")
+	print("};")
 
 if __name__ == '__main__':
 	main()
