@@ -263,6 +263,11 @@ void setup()
 	if (digitalRead(PIN_SW3) == LOW)
 		u2 |= 1 << 1;
 
+	Serial.print("u1=");
+	Serial.print(u1);
+	Serial.print(" u2=");
+	Serial.println(u2);
+
 	switch (u1) {
 		case 0:
 			panic("test");
