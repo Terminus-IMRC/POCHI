@@ -187,6 +187,17 @@ void do_entries(const int n, const uint32_t entries_time[], const uint8_t entrie
 			timing_start[dir] = m;
 			is_moving[dir] = !0;
 			c ++;
+			Serial.print("Going to write d");
+			Serial.print(dir);
+			Serial.print(" 1 ");
+			Serial.print(dir_dir);
+			Serial.print(" for ");
+			Serial.print(s);
+			Serial.print(" msecs (deg=");
+			Serial.print(deg);
+			Serial.print(" cur_degrees=");
+			Serial.print(cur_degrees);
+			Serial.println(")");
 			write_dn(dir, 1, dir_dir);
 			prev_cur_degrees[dir] = cur_degrees;
 			prev_degrees[dir] = deg;
