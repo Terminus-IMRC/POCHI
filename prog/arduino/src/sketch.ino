@@ -24,6 +24,10 @@ void write_d0(const int v0, const int v1);
 void write_d1(const int v0, const int v1);
 void write_dn(const int direction, const int v0, const int v1);
 void mode_test(const uint8_t u2);
+void mode_entries(const uint8_t u2);
+void do_entries(const int n, const uint32_t entries_time[], const uint8_t entries_direction[], const int8_t entries_degrees[]);
+int8_t msec_to_degrees(const uint8_t dir, const int8_t from_deg, uint32_t msec);
+uint32_t degrees_to_msec(const uint8_t dir, const int8_t cur_deg, const int8_t deg);
 
 #define HIGH_or_LOW(v) ((((v)) ? HIGH : LOW))
 #define panic(str) _panic(__FILE__, __LINE__, str)
@@ -114,6 +118,108 @@ void mode_test(const uint8_t u2)
 	}
 }
 
+void mode_entries(const uint8_t u2)
+{
+	switch (u2) {
+		case 0:
+			do_entries(ENTRIES_EXAMPLE_N, entries_example_time, entries_example_direction, entries_example_degrees);
+			break;
+		default:
+			panic("invalid u2 value");
+	}
+}
+
+void do_entries(const int n, const uint32_t entries_time[], const uint8_t entries_direction[], const int8_t entries_degrees[])
+{
+	int c;
+	int is_moving[2] = {0, 0};
+	uint32_t timing_pitch[2], timing_start[2];
+	uint8_t prev_dir_dir[2];
+	int8_t prev_cur_degrees[2] = {0, 0}, prev_degrees[2] = {0, 0};
+
+	for (c = 0; c < n; ) {
+		int i;
+		uint32_t m = millis();
+		uint32_t et, s;
+		uint8_t dir, dir_dir;
+		int8_t deg, cur_degrees;
+
+		for (i = 0; i <= 1; i ++) {
+			if (is_moving[i]) {
+				if (timing_start[i] + timing_pitch[i] <= m) {
+					write_dn(i, 0, 0);
+					is_moving[i] = 0;
+				}
+			}
+		}
+
+		et = read_entry_time(entries_time, c);
+		dir = read_entry_time(entries_direction, c);
+		deg = read_entry_degrees(entries_degrees, c);
+
+		if (et >= m) {
+			if (is_moving[dir]) {
+				int8_t d_offset = (prev_dir_dir[dir] == 0 ? 1 : -1) * msec_to_degrees(dir, prev_cur_degrees[dir], m - timing_start[dir]);
+				cur_degrees = prev_cur_degrees[dir] + d_offset;
+			} else {
+				cur_degrees = prev_cur_degrees[dir] + prev_degrees[dir];
+				if (cur_degrees == deg) {
+					c ++;
+					continue;
+				}
+			}
+
+			dir_dir = (cur_degrees < deg ? 0 : 1);
+			s = degrees_to_msec(dir, cur_degrees, deg);
+
+			timing_pitch[dir] = s;
+			timing_start[dir] = m;
+			is_moving[dir] = !0;
+			c ++;
+			write_dn(dir, 1, dir_dir);
+			prev_cur_degrees[dir] = cur_degrees;
+			prev_degrees[dir] = deg;
+			prev_dir_dir[dir] = dir_dir;
+		}
+	}
+}
+
+int8_t msec_to_degrees(const uint8_t dir, const int8_t from_deg, uint32_t msec)
+{
+	int8_t ret;
+
+	switch (dir) {
+		case 0:
+			ret = msec * 20;
+			break;
+		case 1:
+			ret = msec * 20;
+			break;
+		default:
+			panic("invalid direction value");
+	}
+
+	return ret;
+}
+
+uint32_t degrees_to_msec(const uint8_t dir, const int8_t cur_deg, const int8_t deg)
+{
+	uint32_t ret;
+
+	switch (dir) {
+		case 0:
+			ret = deg / 20.0;
+			break;
+		case 1:
+			ret = deg / 20.0;
+			break;
+		default:
+			panic("invalid direction value");
+	}
+
+	return ret;
+}
+
 void setup()
 {
 	uint8_t u1, u2;
@@ -164,11 +270,9 @@ void setup()
 		case 2:
 			mode_test(u2);
 			break;
-#if 0
 		case 3:
 			mode_entries(u2);
 			break;
-#endif
 		default:
 			panic("invalid u1 value");
 	}
