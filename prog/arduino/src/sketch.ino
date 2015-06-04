@@ -155,7 +155,7 @@ void do_entries(const int n, const uint32_t entries_time[], const uint8_t entrie
 
 		for (i = 0; i <= 1; i ++) {
 			if (is_moving[i]) {
-				if (timing_start[i] + timing_pitch[i] <= m) {
+				if (timing_start[i] + timing_pitch[i] >= m) {
 					write_dn(i, 0, 0);
 					is_moving[i] = 0;
 				}
@@ -166,7 +166,7 @@ void do_entries(const int n, const uint32_t entries_time[], const uint8_t entrie
 		dir = read_entry_time(entries_direction, c);
 		deg = read_entry_degrees(entries_degrees, c);
 
-		if (et >= m) {
+		if (et <= m) {
 			if (is_moving[dir]) {
 				int8_t d_offset = (prev_dir_dir[dir] == 0 ? 1 : -1) * msec_to_degrees(dir, prev_cur_degrees[dir], m - timing_start[dir]);
 				cur_degrees = prev_cur_degrees[dir] + d_offset;
