@@ -173,9 +173,9 @@ void do_entries(const int n, const uint32_t entries_time[], const uint8_t entrie
 		if (et <= m) {
 			if (is_moving[dir]) {
 				int8_t d_offset = (prev_dir_dir[dir] == 0 ? 1 : -1) * msec_to_degrees(dir, prev_cur_degrees[dir], m - timing_start[dir]);
-				cur_degrees = prev_cur_degrees[dir] + d_offset;
+				cur_degrees = d_offset;
 			} else {
-				cur_degrees = prev_cur_degrees[dir] + prev_degrees[dir];
+				cur_degrees = prev_degrees[dir];
 				if (cur_degrees == deg) {
 					c ++;
 					continue;
