@@ -155,7 +155,7 @@ void do_entries(const int n, const uint32_t entries_time[], const uint8_t entrie
 
 		for (i = 0; i <= 1; i ++) {
 			if (is_moving[i]) {
-				if (timing_start[i] + timing_pitch[i] >= m) {
+				if (timing_start[i] + timing_pitch[i] <= m) {
 					write_dn(i, 0, 0);
 					is_moving[i] = 0;
 				}
