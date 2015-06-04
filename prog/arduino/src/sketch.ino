@@ -153,7 +153,7 @@ void do_entries(const int n, const uint32_t entries_time[], const uint8_t entrie
 		uint8_t dir, dir_dir;
 		int8_t deg, cur_degrees;
 
-		if (c == n - 1 && (!is_moving[0]) && (!is_moving[1]))
+		if (c == n && (!is_moving[0]) && (!is_moving[1]))
 			break;
 		for (i = 0; i <= 1; i ++) {
 			if (is_moving[i]) {
@@ -163,6 +163,8 @@ void do_entries(const int n, const uint32_t entries_time[], const uint8_t entrie
 				}
 			}
 		}
+		if (c == n)
+			continue;
 
 		et = read_entry_time(entries_time, c);
 		dir = read_entry_time(entries_direction, c);
