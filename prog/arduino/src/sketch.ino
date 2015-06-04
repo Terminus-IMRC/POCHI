@@ -133,6 +133,9 @@ void mode_entries(const uint8_t u2)
 		case 0:
 			do_entries(ENTRIES_EXAMPLE_N, entries_example_time, entries_example_direction, entries_example_degrees);
 			break;
+		case 1:
+			do_entries(ENTRIES_WHITEGLINT_N, entries_WhiteGlint_time, entries_WhiteGlint_direction, entries_WhiteGlint_degrees);
+			break;
 		default:
 			panic("invalid u2 value");
 	}

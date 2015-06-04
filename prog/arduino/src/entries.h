@@ -9,5 +9,6 @@
 #define read_entry_degrees(e, i) (pgm_read_byte(&(e[i])))
 
 #include "entries_example.h"
+#include "entries_WhiteGlint.h"
 
 #endif /* _ENTRIES_H_ */
