@@ -113,6 +113,15 @@ void mode_test(const uint8_t u2)
 					write_d1(0, 0);
 			}
 			break;
+		case 2:
+			digitalWrite(PIN_0, LOW);
+			digitalWrite(PIN_0_0, LOW);
+			digitalWrite(PIN_0_1, LOW);
+			digitalWrite(PIN_1, LOW);
+			digitalWrite(PIN_1_0, LOW);
+			digitalWrite(PIN_1_1, LOW);
+			panic("power down");
+			break;
 		default:
 			panic("invalid u2 value");
 	}
