@@ -229,10 +229,10 @@ int8_t msec_to_degrees(const uint8_t dir, const int8_t from_deg, uint32_t msec)
 
 	switch (dir) {
 		case 0:
-			ret = msec * 20;
+			ret = msec * 0.020;
 			break;
 		case 1:
-			ret = msec * 20;
+			ret = msec * 0.020;
 			break;
 		default:
 			panic("invalid direction value");
@@ -249,10 +249,10 @@ uint32_t degrees_to_msec(const uint8_t dir, const int8_t cur_deg, int8_t deg)
 
 	switch (dir) {
 		case 0:
-			ret = deg / 20.0;
+			ret = deg / 0.020;
 			break;
 		case 1:
-			ret = deg / 20.0;
+			ret = deg / 0.020;
 			break;
 		default:
 			panic("invalid direction value");
