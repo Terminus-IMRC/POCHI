@@ -88,13 +88,13 @@ def main():
 
 	print("static const uint8_t entries_" + b + "_direction[" + str(n) + "] PROGMEM = { \\")
 	for i in range(len(ts)):
-		print("\t/* %d */ %d, \\" % (i, ts[i][0]))
+		print("\t/* %d */ %d, \\" % (i, ts[i][1]))
 	print("};")
 	print("")
 
 	print("static const int8_t entries_" + b + "_degrees[" + str(n) + "] PROGMEM = { \\")
 	for i in range(len(ts)):
-		print("\t/* %d */ %d, \\" % (i, ts[i][0]))
+		print("\t/* %d */ %d, \\" % (i, ts[i][2]))
 	print("};")
 	print("")
 
