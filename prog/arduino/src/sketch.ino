@@ -179,7 +179,7 @@ void do_entries(const int n, const uint32_t entries_time[], const uint8_t entrie
 			}
 
 			dir_dir = (cur_degrees < deg ? 0 : 1);
-			s = degrees_to_msec(dir, cur_degrees, deg);
+			s = degrees_to_msec(dir, cur_degrees, deg - cur_degrees);
 
 			timing_pitch[dir] = s;
 			timing_start[dir] = m;
