@@ -27,7 +27,7 @@ void mode_test(const uint8_t u2);
 void mode_entries(const uint8_t u2);
 void do_entries(const int n, const uint32_t entries_time[], const uint8_t entries_direction[], const int8_t entries_degrees[]);
 int8_t msec_to_degrees(const uint8_t dir, const int8_t from_deg, uint32_t msec);
-uint32_t degrees_to_msec(const uint8_t dir, const int8_t cur_deg, const int8_t deg);
+uint32_t degrees_to_msec(const uint8_t dir, const int8_t cur_deg, int8_t deg);
 
 #define HIGH_or_LOW(v) ((((v)) ? HIGH : LOW))
 #define panic(str) _panic(__FILE__, __LINE__, str)
@@ -211,9 +211,11 @@ int8_t msec_to_degrees(const uint8_t dir, const int8_t from_deg, uint32_t msec)
 	return ret;
 }
 
-uint32_t degrees_to_msec(const uint8_t dir, const int8_t cur_deg, const int8_t deg)
+uint32_t degrees_to_msec(const uint8_t dir, const int8_t cur_deg, int8_t deg)
 {
 	uint32_t ret;
+
+	deg = (deg < 0 ? -deg : deg);
 
 	switch (dir) {
 		case 0:
