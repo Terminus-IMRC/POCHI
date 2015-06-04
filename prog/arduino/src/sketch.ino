@@ -174,6 +174,18 @@ void do_entries(const int n, const uint32_t entries_time[], const uint8_t entrie
 			if (is_moving[dir]) {
 				int8_t d_offset = (prev_dir_dir[dir] == 0 ? 1 : -1) * msec_to_degrees(dir, prev_cur_degrees[dir], m - timing_start[dir]);
 				cur_degrees = d_offset;
+				Serial.print(c);
+				Serial.print(": ");
+				Serial.print(dir);
+				Serial.print(": Well, rotated only for ");
+				Serial.print(m - timing_start[dir]);
+				Serial.print(" msecs (");
+				Serial.print(d_offset);
+				Serial.print(" degrees) while the goal was ");
+				Serial.print(timing_pitch[dir]);
+				Serial.print(" msecs (");
+				Serial.print(prev_degrees[dir] - prev_cur_degrees[dir]);
+				Serial.println(" degrees).");
 			} else {
 				cur_degrees = prev_degrees[dir];
 				if (cur_degrees == deg) {
