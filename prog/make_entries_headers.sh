@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
 for f in example.txt; do
-	prog/entries_to_header.sh entries/"$f" prog/arduino/src/
+	b=$(basename "$f" .txt)
+	prog/entries_to_header.py "$b" <entries/"$f" >prog/arduino/src/entries_"$b".h
 done

@@ -44,6 +44,11 @@ def str_to_entry(str, prev_timing):
 	return (timing, direction, degrees)
 
 def main():
+	if len(sys.argv) != 2:
+		print("error: invalid arguments", file = sys.stderr)
+		print("Usage: " + sys.argv[0] + " [table prefix]", file = sys.stderr)
+		exit(1)
+
 	prev_timing = 0
 	ts = []
 	while True:
@@ -59,11 +64,41 @@ def main():
 		prev_timing = t[0]
 
 	ts.sort()
-	print("{")
+
+	n = len(ts)
+	b = sys.argv[1]
+	bc = b.upper()
+	ig = "_ENTRIES_" + bc + "_H_"
+
+	print("#ifndef " + ig)
+	print("#define " + ig)
+	print("")
+	print("#include <stdint.h>")
+	print("#include <avr/pgmspace.h>")
+	print("")
+
+	print("#define ENTRIES_" + bc + "_N " + str(n))
+	print("")
+
+	print("static const uint32_t entries_" + b + "_time[" + str(n) + "] PROGMEM = { \\")
 	for i in range(len(ts)):
-		t = ts[i]
-		print("\t/* %d */ {%d, %d, %d}," % (i, t[0], t[1], t[2]))
+		print("\t/* %d */ %d, \\" % (i, ts[i][0]))
 	print("};")
+	print("")
+
+	print("static const uint8_t entries_" + b + "_direction[" + str(n) + "] PROGMEM = { \\")
+	for i in range(len(ts)):
+		print("\t/* %d */ %d, \\" % (i, ts[i][0]))
+	print("};")
+	print("")
+
+	print("static const int8_t entries_" + b + "_degrees[" + str(n) + "] PROGMEM = { \\")
+	for i in range(len(ts)):
+		print("\t/* %d */ %d, \\" % (i, ts[i][0]))
+	print("};")
+	print("")
+
+	print("#endif /* " + ig + " */")
 
 if __name__ == '__main__':
 	main()
