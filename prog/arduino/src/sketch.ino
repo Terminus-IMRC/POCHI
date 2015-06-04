@@ -146,13 +146,15 @@ void do_entries(const int n, const uint32_t entries_time[], const uint8_t entrie
 	uint8_t prev_dir_dir[2];
 	int8_t prev_cur_degrees[2] = {0, 0}, prev_degrees[2] = {0, 0};
 
-	for (c = 0; c < n; ) {
+	for (c = 0; ; ) {
 		int i;
 		uint32_t m = millis();
 		uint32_t et, s;
 		uint8_t dir, dir_dir;
 		int8_t deg, cur_degrees;
 
+		if (c == n - 1 && (!is_moving[0]) && (!is_moving[1]))
+			break;
 		for (i = 0; i <= 1; i ++) {
 			if (is_moving[i]) {
 				if (timing_start[i] + timing_pitch[i] <= m) {
