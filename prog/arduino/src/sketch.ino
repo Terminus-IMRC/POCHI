@@ -22,6 +22,7 @@ void _panic(const char *filename, const int line, const char *str);
 void write_d(const int pin, const int pin_0, const int pin_1, const int v0, const int v1);
 void write_d0(const int v0, const int v1);
 void write_d1(const int v0, const int v1);
+void write_dn(const int direction, const int v0, const int v1);
 void mode_test(const uint8_t u2);
 
 #define HIGH_or_LOW(v) ((((v)) ? HIGH : LOW))
@@ -61,6 +62,20 @@ void write_d0(const int v0, const int v1)
 void write_d1(const int v0, const int v1)
 {
 	write_d(PIN_1, PIN_1_0, PIN_1_1, v0, v1);
+}
+
+void write_dn(const int direction, const int v0, const int v1)
+{
+	switch (direction) {
+		case 0:
+			write_d0(v0, v1);
+			break;
+		case 1:
+			write_d1(v0, v1);
+			break;
+		default:
+			panic("invalid direction value");
+	}
 }
 
 void mode_test(const uint8_t u2)
