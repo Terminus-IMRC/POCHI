@@ -1,3 +1,5 @@
 prog/arduino/.build/
 prog/arduino/lib/
 prog/arduino/src/entries_*.h
+
+*.swp
