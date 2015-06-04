@@ -201,7 +201,10 @@ void do_entries(const int n, const uint32_t entries_time[], const uint8_t entrie
 			timing_start[dir] = m;
 			is_moving[dir] = !0;
 			c ++;
-			Serial.print("Going to write d");
+			Serial.print(c);
+			Serial.print(": ");
+			Serial.print(dir);
+			Serial.print(": Going to write d");
 			Serial.print(dir);
 			Serial.print(" 1 ");
 			Serial.print(dir_dir);
