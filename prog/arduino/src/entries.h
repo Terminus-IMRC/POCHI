@@ -10,5 +10,6 @@
 
 #include "entries_example.h"
 #include "entries_WhiteGlint.h"
+#include "entries_mission3.h"
 
 #endif /* _ENTRIES_H_ */
