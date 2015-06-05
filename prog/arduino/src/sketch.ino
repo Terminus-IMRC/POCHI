@@ -235,7 +235,7 @@ int8_t msec_to_degrees(const uint8_t dir, const int8_t from_deg, uint32_t msec)
 
 	switch (dir) {
 		case 0:
-			ret = msec * 0.020;
+			ret = msec * 0.0201;
 			break;
 		case 1:
 			ret = msec * 0.020;
@@ -255,7 +255,7 @@ uint32_t degrees_to_msec(const uint8_t dir, const int8_t cur_deg, int8_t deg)
 
 	switch (dir) {
 		case 0:
-			ret = deg / 0.020;
+			ret = deg / 0.0201;
 			break;
 		case 1:
 			ret = deg / 0.020;
