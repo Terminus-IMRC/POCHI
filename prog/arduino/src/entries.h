@@ -11,5 +11,6 @@
 #include "entries_example.h"
 #include "entries_WhiteGlint.h"
 #include "entries_mission3.h"
+#include "entries_gungriffon.h"
 
 #endif /* _ENTRIES_H_ */

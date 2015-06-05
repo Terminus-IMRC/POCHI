@@ -139,6 +139,9 @@ void mode_entries(const uint8_t u2)
 		case 2:
 			do_entries(ENTRIES_MISSION3_N, entries_mission3_time, entries_mission3_direction, entries_mission3_degrees);
 			break;
+		case 3:
+			do_entries(ENTRIES_GUNGRIFFON_N, entries_gungriffon_time, entries_gungriffon_direction, entries_gungriffon_degrees);
+			break;
 		default:
 			panic("invalid u2 value");
 	}
