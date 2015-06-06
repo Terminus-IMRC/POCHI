@@ -154,10 +154,11 @@ void do_entries(const int n, const uint32_t entries_time[], const uint8_t entrie
 	uint32_t timing_pitch[2], timing_start[2];
 	uint8_t prev_dir_dir[2];
 	int8_t prev_cur_degrees[2] = {0, 0}, prev_degrees[2] = {0, 0};
+	uint32_t ms = millis();
 
 	for (c = 0; ; ) {
 		int i;
-		uint32_t m = millis();
+		uint32_t m = millis() - ms;
 		uint32_t et, s;
 		uint8_t dir, dir_dir;
 		int8_t deg, cur_degrees;
