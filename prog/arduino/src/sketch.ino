@@ -127,6 +127,42 @@ void mode_test(const uint8_t u2)
 	}
 }
 
+void mode_interactive(const int8_t u2)
+{
+	int v;
+
+	Serial.println("Entering the interactive mode");
+
+	while (Serial.available() == 0)
+		;
+
+	v = Serial.read();
+	switch (v) {
+		case '0':
+		case '1':
+		case '2':
+		case '3':
+			Serial.print("Input: ");
+			Serial.println(v);
+			Serial.println("3");
+			delay(1000);
+			Serial.println("2");
+			delay(1000);
+			Serial.println("1");
+			delay(1000);
+			mode_entries(v - '0');
+			break;
+		case 'm':
+			mode_test(1);
+			break;
+		default:
+			Serial.print("error: invalid input character: ");
+			Serial.println((char) v);
+	}
+	Serial.println("Entering the test mode");
+	mode_test(1);
+}
+
 void mode_entries(const uint8_t u2)
 {
 	switch (u2) {
@@ -145,6 +181,7 @@ void mode_entries(const uint8_t u2)
 		default:
 			panic("invalid u2 value");
 	}
+	mode_test(1);
 }
 
 void do_entries(const int n, const uint32_t entries_time[], const uint8_t entries_direction[], const int8_t entries_degrees[])
@@ -322,6 +359,9 @@ void setup()
 	switch (u1) {
 		case 0:
 			panic("test");
+			break;
+		case 1:
+			mode_interactive(u2);
 			break;
 		case 2:
 			mode_test(u2);
