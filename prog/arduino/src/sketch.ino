@@ -142,6 +142,7 @@ void mode_interactive(const int8_t u2)
 		case '1':
 		case '2':
 		case '3':
+		case '4':
 			Serial.print("Input: ");
 			Serial.println(v);
 			Serial.println("3");
@@ -177,6 +178,9 @@ void mode_entries(const uint8_t u2)
 			break;
 		case 3:
 			do_entries(ENTRIES_GUNGRIFFON_N, entries_gungriffon_time, entries_gungriffon_direction, entries_gungriffon_degrees);
+			break;
+		case 4:
+			do_entries(ENTRIES_MISSION3SCRIPTVER2_N, entries_mission3scriptver2_time, entries_mission3scriptver2_direction, entries_mission3scriptver2_degrees);
 			break;
 		default:
 			panic("invalid u2 value");
