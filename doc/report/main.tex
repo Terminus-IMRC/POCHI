@@ -1,79 +1,147 @@
-\documentclass{jsarticle}
+\input{header}
 
-\title{POCHIの制御部に関するレポート}
-\author{並木中等教育学校 杉崎}
-\date{平成27年度6月}
+\title{POCHIのモータ制御部に関するレポート}
+\author{\myname}
+\date{}
+
+\def \wrkdir {./}
 
 \begin{document}
 \maketitle
 
-\section{POCHI}
-POCHIは今年度の文化祭(6月5日・6日)のために並木中等教育学校の3回生の生徒によって製作されたモーションライドである。
+\abstract{
+POCHIは平成27年度の文化祭 (6月5日・6日) のために並木中等教育学校の3回生の生徒によって製作されたモーションライドである。
+POCHIは並木中等教育学校の3回生の生徒の1人によって製作することが提案された。
 
-\section{POCHIの製作に関わったメンバーと分担}
 POCHIの製作には杉崎を含む13人のメンバーが関わった。
-メンバーは有機的に活動し、資金提供・材料購入・設計・組立てを行った。
-モーターの制御部に関しては、技術を持ち合わせていた杉崎が担当した。
+メンバーは有機的に活動し、資金提供や材料購入や設計や組立てを行った。
+モータの制御部に関しては、ハードウェアとソフトウェアともに、
+技術を持ち合わせていた杉崎が担当することになった。
 
+本レポートでは、実装した回路とソフトウェアの工夫点や、発生した問題点とそれを解決した策を記す。
+}
+
+\clearpage
 \section{POCHIの構造と動作}
-POCHIは塩化ビニル管を組み合わせ、それをボルトとナットで固定した構造である。
+POCHIは塩化ビニル管を組み合わせ、それをボルトとナットで固定した構造である (図\ref{fig:pochi-perspective})。
 
-POCHIは中心に椅子が固定してあり、それを支えるベースが前後左右に自由に動くようになっている。
-前後方向と左右方向にはモーターが1つずつ設置され、ワイヤによってベースに繋げられている。
-モーターを動かすことによってモーターの軸にワイヤが巻きつけられ、ベースが傾くのである。
+POCHIは中心のベースに椅子が固定してあり、ベースが前後左右に自由に傾くようになっている
+(図\ref{fig:pochi-tilt})。
+前後方向と左右方向にはモータが1つずつ設置され、ワイヤによってベースに繋げられている
+(図\ref{fig:pochi-wire-right}、図\ref{fig:pochi-wire-left}、図\ref{fig:pochi-wire-with-motor})。
+モータを動かすことによってモータの軸にワイヤが巻きつけられ、ベースが傾くのである。
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.45\linewidth}
+\frame{\includegraphics[height=\textheight,width=\textwidth,keepaspectratio]{\wrkdir img/perspective.png}}
+\caption{POCHI本体の全体の写真}
+\label{fig:pochi-perspective}
+\end{minipage}
+\begin{minipage}{0.45\linewidth}
+\frame{\includegraphics[height=\textheight,width=\textwidth,keepaspectratio]{\wrkdir img/tilt.png}}
+\caption{POCHI本体を実際に傾けた様子}
+\label{fig:pochi-tilt}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.45\linewidth}
+\frame{\includegraphics[height=\textheight,width=\textwidth,keepaspectratio]{\wrkdir img/wire-right.png}}
+\caption{POCHI本体の右側のワイヤ部分}
+\label{fig:pochi-wire-right}
+\end{minipage}
+\begin{minipage}{0.45\linewidth}
+\frame{\includegraphics[height=\textheight,width=\textwidth,keepaspectratio]{\wrkdir img/wire-left.png}}
+\caption{POCHI本体の左側のワイヤ部分}
+\label{fig:pochi-wire-left}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.45\linewidth}
+\frame{\includegraphics[height=\textheight,width=\textwidth,keepaspectratio]{\wrkdir img/wire-with-motor.png}}
+\caption{POCHI本体のワイヤとモータの接続部分}
+\label{fig:pochi-wire-with-motor}
+\end{minipage}
+\begin{minipage}{0.45\linewidth}
+\frame{\includegraphics[height=\textheight,width=\textwidth,keepaspectratio]{\wrkdir img/motion.png}}
+\caption{POCHIが実際に人間を乗せて動作している様子}
+\label{fig:pochi-motion}
+\end{minipage}
+\end{figure}
 
 また、前方向の上部にはディスプレイが固定されている。
 
-POCHIは椅子に人が座り、ディスプレイで動画を再生し、それに合わせて椅子が自動で傾くというアトラクションである。
+POCHIは椅子に人が座り、ディスプレイで動画を再生し、それに合わせて椅子が自動で傾くというアトラクションである
+(図\ref{fig:pochi-motion})。
 
 \section{POCHIの制御}
-POCHIの制御はマイコンであるArduinoを用いて自動化して行った。回路やプログラムも全て杉崎が作成した。
+POCHIの制御はマイコンであるArduinoを用いて自動化して行った。回路やプログラムは全て杉崎が作成した。
 
 \subsection{ソフトウェア}
+\subsubsection{マイコンとプログラミング環境}
 マイコンには、デフォルトでUARTインターフェースではなくUSBインターフェース経由で
 コンピュータと通信できるようになっているArduinoを用いた。
-マイコンのためのプログラムをコンパイルし、特定の形式に変換し、マイコンにアップロードするには複雑な作業が必要となるが、
+マイコンのためのプログラムをコンパイルし、特定の形式に変換し、マイコンにアップロードするには複雑な作業手順が必要となるが、
 今回はそれらを自動で行うためにinotoolというソフトウェアを使用した。
 また、inotoolを使用する際にはinotool 独特のコマンドを入力する必要があるが、
-それをMakeコマンドにより透過的に行えるようなMakefileを書いた。
+それをmakeコマンドにより透過的に行えるようなMakefileを書いた。
 
-POCHIのディスプレイで流す動画は他のメンバーが制作し、合わせて3種類ある。
+\subsubsection{動画と本体の動作}
+POCHIのディスプレイで流す動画は他のメンバーが制作し、全部で3種類ある。
 動画に合わせた傾けるタイミングや方向・角度は、動画制作者に特定の書式で書いてもらった。
 書式の説明のドキュメントはMarkdown言語を用いて記した。
 
 今回、動画制作者には「傾き始めるタイミング」と「傾ける方向・角度」を指定してもらった。
-これは、POCHI本体の製作が文化祭当日まで続いており、モーターに電流を流した際に単位秒あたりに傾く角度が
+これは、POCHI本体の製作が文化祭当日まで続いており、モータに電流を流した際に単位秒あたりに傾く角度が
 直前まで分からなかったが、書いてもらったタイミングや方向・角度を後に訂正するのは大変なので、
 単位秒あたりに傾く角度だけを訂正すれば良いようにしたためである。
 そのため、プログラムには動かす角度が大きすぎて次のタイミングまでに目標の角度が到達しない場合でも
-その後の動作に影響がないようにするための機能も加えた。
-書いてもらったタイミングや方向・角度は自分で書いたプログラムを用いて、C言語のプログラムに埋め込みやすい形式に変換し、
-プログラム中では配列として扱った。
+その後の動作に影響がないようにするための例外処理機能も加えた。
+動画製作者に書いてもらったタイミングや方向・角度は杉崎が書いたプログラムを用いて、
+C言語のプログラムに埋め込みやすい形式に変換し、プログラム中では配列として扱った。
 
 また、今回使用したArduinoに載っているチップはATmega328Pである。
 ATmega328Pはフラッシュに書き込まれたプログラム中の配列を、デフォルトでは実行時にメモリに展開する。
 しかし、ATmega328Pのメモリ容量は2KBと小さく、全てのタイミングや方向・角度をメモリに展開すると、
-メモリが溢れ、動作しなくなってしまう。
+メモリが溢れ、正しく動作しなくなってしまう可能性がある。
 よって、実行時に配列をメモリに展開せずフラッシュから直接値を読むPGMを使用した。
 
-使用したプログラムやドキュメントはインターネット上で公開した。
-
 \subsection{ハードウェア}
-回路はブレッドボード上に実装した。
-回路は、マイコンから受け取った信号をトランジスタを用いて増幅してリレーを動かす仕組みである。
-リレーを用いたのは、モーターに流す電流の方向は本体を傾ける方向により切り替わるからである。
-モーターに流す電流の方向の切り替えは、ハードウェアにトランジスタを用いてNOT回路を実装し、実現した。
-ノイズ対策のため、マイコンとモーターの回路は電源的に完全に分離させ、
-また、リレーやモーターにはセラミックコンデンサを並列に接続した。
+POCHIは人を乗せて動くので、モータは出力が比較的大きなものが必要だった。
+しかし、そのようなモータは高価で、予算の範囲内では購入することができなかった。
+そこで、今回は友人の親戚の方に車のワイパのモータを無償で頂き、
+それを使うことにした。
+このモータは直流モータで、出力は想定していた仕様を満たすものであった。
 
+回路はブレッドボード上に実装した (図\ref{fig:pochi-circuit})。
+回路は、マイコンから受け取った信号をトランジスタで増幅してリレーを動かす仕組みである。
+初めはトランジスタを用いてモータを制御しようとしたが、
+モータに流す電流の方向は本体を傾ける方向により切り替わり、また、
+モータに比較的大きな電流を流す必要があったため、リレーを用いた。
+モータに流す電流の方向の切り替えは、ハードウェアにトランジスタを用いてNOT回路を実装し、実現した。
+ノイズ対策のため、マイコンとモータの回路は電源的に完全に分離させた。
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.5\linewidth}
+\frame{\includegraphics[height=\textheight,width=\textwidth,keepaspectratio]{\wrkdir img/circuit.png}}
+\caption{POCHIの制御回路 (左:モータ制御回路、右:マイコン)}
+\label{fig:pochi-circuit}
+\end{minipage}
+\end{figure}
+
+\section{POCHIの実際の動作}
 当日は前後方向のワイヤが乗る人の体重の関係でどうしても緩んでしまい、
-前後方向のモーターは動かさなかったが、その他は正常に動いた。
+前後方向のモータは動かすことができなかったが、左右方向のモータや
+その制御部は正常に動いた。
 
-\section{感想}
-POCHIの制御部については本体の製作が長引いたことや機構的な制限などにより困難な点があったが、
-文化祭当日にはうまく動いたのでよかった。
-また、今回の製作では、複数人で行う開発やハードウェアとソフトウェアの融合の楽しさや意義を
-見出すことができた。
-全体的にとても良い経験となった。
+\section{ソースコードやドキュメントの公開}
+今回作成したプログラムやドキュメントは以下のサイトで公開している。
+
+\url{http://github.com/Terminus-IMRC/POCHI/}
 
 \end{document}
